@@ -1,0 +1,321 @@
+--------------------------------------------------------------------Switch 1(SW1)-----------------------------------------------------------------------------------
+
+Switch>
+Switch>en 
+Switch#
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#
+Switch(config)#
+Switch(config)#hostname SW1
+SW1(config)#
+SW1(config)#
+SW1(config)#vlan 10
+SW1(config-vlan)#name HR
+SW1(config-vlan)#ex
+SW1(config)#
+SW1(config)#vlan 20
+SW1(config-vlan)#name SALES
+SW1(config-vlan)#ex
+SW1(config)#
+SW1(config)#
+SW1(config)#vlan 30
+SW1(config-vlan)#name QA
+SW1(config-vlan)#ex
+SW1(config)#
+SW1(config)#
+SW1(config)#vlan 40
+SW1(config-vlan)#name DEV
+SW1(config-vlan)#ex
+SW1(config)#
+SW1(config)#
+SW1(config)#vlan 99
+SW1(config-vlan)#name NATIVE
+SW1(config-vlan)#EX
+SW1(config)#
+SW1(config)#EX
+SW1#
+%SYS-5-CONFIG_I: Configured from console by console
+
+SW1#
+SW1#
+SW1#sh vlan br
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   HR                               active    
+20   SALES                            active    
+30   QA                               active    
+40   DEV                              active    
+99   NATIVE                           active    
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+SW1#
+SW1#
+SW1#
+SW1#
+SW1#en 
+SW1#
+SW1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW1(config)#
+SW1(config)#interface range fa0/1-3
+SW1(config-if-range)#switchport mode access
+SW1(config-if-range)#switchport access vlan 10
+SW1(config-if-range)#ex
+SW1(config)#
+SW1(config)#interface range fa0/4-5
+SW1(config-if-range)#switchport mode access
+SW1(config-if-range)#switchport access vlan 20
+SW1(config-if-range)#ex
+SW1(config)#
+SW1(config)#interface range fa0/6-8
+SW1(config-if-range)#switchport mode access
+SW1(config-if-range)#switchport access vlan 30
+SW1(config-if-range)#ex
+SW1(config)#
+SW1(config)#interface fa0/15
+SW1(config-if)#switchport mode access
+SW1(config-if)#switchport access vlan 40
+SW1(config-if)#ex
+SW1(config)#
+SW1(config)#interface fa0/17
+SW1(config-if)#switchport mode access
+SW1(config-if)#switchport access vlan 40
+SW1(config-if)#ex
+SW1(config)#
+SW1(config)#interface fa0/24
+SW1(config-if)#switchport mode trunk
+
+SW1(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/24, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/24, changed state to up
+
+SW1(config-if)#switchport trunk native vlan 99
+SW1(config-if)#%SPANTREE-2-RECV_PVID_ERR: Received BPDU with inconsistent peer vlan id 1 on FastEthernet0/24 VLAN99.
+
+%SPANTREE-2-BLOCK_PVID_LOCAL: Blocking FastEthernet0/24 on VLAN0099. Inconsistent local vlan.
+
+interface fa0/17
+SW1(config-if)#
+SW1(config-if)#switchport trunk allowed vlan 10,20,30,40
+SW1(config-if)#
+SW1(config-if)#ex
+SW1(config)#
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on FastEthernet0/24 (99), with SW2 FastEthernet0/24 (1).
+%SPANTREE-2-UNBLOCK_CONSIST_PORT: Unblocking FastEthernet0/24 on VLAN0001. Port consistency restored.
+
+%SPANTREE-2-UNBLOCK_CONSIST_PORT: Unblocking FastEthernet0/24 on VLAN0099. Port consistency restored.
+
+
+SW1(config)#
+SW1(config)#ex
+SW1#
+%SYS-5-CONFIG_I: Configured from console by console
+
+SW1#
+SW1#sh vlan br
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/16, Fa0/18
+                                                Fa0/19, Fa0/20, Fa0/21, Fa0/22
+                                                Fa0/23, Gig0/1, Gig0/2
+10   HR                               active    Fa0/1, Fa0/2, Fa0/3
+20   SALES                            active    Fa0/4, Fa0/5
+30   QA                               active    Fa0/6, Fa0/7, Fa0/8
+40   DEV                              active    Fa0/15, Fa0/17
+99   NATIVE                           active    
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+SW1#
+SW1#
+SW1#sh int trunk
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/24      on           802.1q         trunking      99
+
+Port        Vlans allowed on trunk
+Fa0/24      1-1005
+
+Port        Vlans allowed and active in management domain
+Fa0/24      1,10,20,30,40,99
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/24      1,10,20,30,40,99
+
+SW1#
+SW1#wr
+Building configuration...
+[OK]
+SW1#
+
+
+
+
+
+--------------------------------------------------------------------Switch 2(SW2)-----------------------------------------------------------------------------------
+
+Switch>
+Switch>en
+Switch#
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#
+Switch(config)#
+Switch(config)#hostname SW2
+SW2(config)#
+SW2(config)#vlan 10
+SW2(config-vlan)#name HR
+SW2(config-vlan)#ex
+SW2(config)#
+SW2(config)#vlan 20
+SW2(config-vlan)#name SALES
+SW2(config-vlan)#ex
+SW2(config)#
+SW2(config)#vlan 30
+SW2(config-vlan)#name QA
+SW2(config-vlan)#ex
+SW2(config)#
+SW2(config)#vlan 40
+SW2(config-vlan)#name DEV
+SW2(config-vlan)#ex
+SW2(config)#
+SW2(config)#vlan 99
+SW2(config-vlan)#name NATIVE
+SW2(config-vlan)#
+SW2(config-vlan)#
+SW2(config-vlan)#ex
+SW2(config)#
+SW2(config)#
+SW2(config)#ex
+SW2#
+%SYS-5-CONFIG_I: Configured from console by console
+
+SW2#
+SW2#sh vlan br
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   HR                               active    
+20   SALES                            active    
+30   QA                               active    
+40   DEV                              active    
+99   NATIVE                           active    
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+SW2#
+SW2#
+SW2#
+SW2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW2(config)#
+SW2(config)#interface range fa0/5-7
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 10
+SW2(config-if-range)#
+SW2(config-if-range)#ex
+SW2(config)#
+SW2(config)#interface range fa0/9-10
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 20
+SW2(config-if-range)#
+SW2(config-if-range)#ex
+SW2(config)#
+SW2(config)#interface range fa0/11-12
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 30
+SW2(config-if-range)#
+SW2(config-if-range)#ex
+SW2(config)#
+SW2(config)#interface range fa0/19-21
+SW2(config-if-range)#
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 40
+SW2(config-if-range)#
+SW2(config-if-range)#ex
+SW2(config)#
+SW2(config)#%SPANTREE-2-RECV_PVID_ERR: Received 802.1Q BPDU on non trunk FastEthernet0/24 VLAN1.
+
+%SPANTREE-2-BLOCK_PVID_LOCAL: Blocking FastEthernet0/24 on VLAN0001. Inconsistent port type.
+
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/24, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/24, changed state to up
+
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on FastEthernet0/24 (1), with SW1 FastEthernet0/24 (99).
+
+SW2(config)#
+SW2(config)#interface fa0/24
+SW2(config-if)#switchport mode trunk
+SW2(config-if)#
+SW2(config-if)#switchport trunk native vlan 99
+SW2(config-if)#switchport trunk allowed vlan 10,20,30,40
+SW2(config-if)#
+SW2(config-if)#ex
+SW2(config)#
+SW2(config)#
+SW2(config)#ex
+SW2#
+%SYS-5-CONFIG_I: Configured from console by console
+
+SW2#
+SW2#sh vlan br
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/8, Fa0/13, Fa0/14, Fa0/15
+                                                Fa0/16, Fa0/17, Fa0/18, Fa0/22
+                                                Fa0/23, Gig0/1, Gig0/2
+10   HR                               active    Fa0/5, Fa0/6, Fa0/7
+20   SALES                            active    Fa0/9, Fa0/10
+30   QA                               active    Fa0/11, Fa0/12
+40   DEV                              active    Fa0/19, Fa0/20, Fa0/21
+99   NATIVE                           active    
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+SW2#
+SW2#sh int trunk
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/24      on           802.1q         trunking      99
+
+Port        Vlans allowed on trunk
+Fa0/24      10,20,30,40
+
+Port        Vlans allowed and active in management domain
+Fa0/24      10,20,30,40
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/24      10,20,30,40
+
+SW2#
+SW2#
+SW2#wr
+Building configuration...
+[OK]
+SW2#

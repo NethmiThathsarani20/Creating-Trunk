@@ -1,0 +1,218 @@
+************************************************
+01.We have to create hostnames for both switches
+************************************************
+
+Switch(config)#hostname SW1
+
+Switch(config)#hostname SW2
+
+
+
+***********************************************
+02.We have to create the Vlans in both switches
+***********************************************
+(a). Create VLANs in Switch 01
+------------------------------
+SW1(config)#vlan 10
+SW1(config-vlan)#name HR
+SW1(config-vlan)#exit
+
+SW1(config)#vlan 20
+SW1(config-vlan)#name SALES
+SW1(config-vlan)#exit
+
+SW1(config)#vlan 30
+SW1(config-vlan)#name QA
+SW1(config-vlan)#exit
+
+SW1(config)#vlan 40
+SW1(config-vlan)#name DEV
+SW1(config-vlan)#exit
+
+
+Creating VLAN 99 as Native VLAN
+-------------------------------
+SW1(config)#vlan 99
+SW1(config-vlan)#name NATIVE
+SW1(config-vlan)#exit
+
+
+
+(b). Create VLANs in Switch 02
+------------------------------
+SW2(config)#vlan 10
+SW2(config-vlan)#name HR
+SW2(config-vlan)#exit
+
+SW2(config)#vlan 20
+SW2(config-vlan)#name SALES
+SW2(config-vlan)#exit
+
+SW2(config)#vlan 30
+SW2(config-vlan)#name QA
+SW2(config-vlan)#exit
+
+SW2(config)#vlan 40
+SW2(config-vlan)#name DEV
+SW2(config-vlan)#exit
+
+
+Creating VLAN 99 as Native VLAN
+-------------------------------
+
+SW2(config)#vlan 99
+SW2(config-vlan)#name NATIVE
+SW2(config-vlan)#exit
+
+
+
+
+**************************************************
+03.We have to assign Vlans to the respective ports
+**************************************************
+(a). Assign Ports to VLANs in Switch 01
+---------------------------------------
+
+Fa0/1, Fa0/2 and Fa0/3 are assigned to VLAN 10
+Fa0/4 and Fa0/5  are assigned to VLAN 20
+Fa0/6, Fa0/7 and Fa0/8 are assigned to VLAN 30
+Fa0/15 and Fa0/17  are assigned to VLAN 40
+
+
+SW1(config)#interface range fa0/1-3
+SW1(config-if-range)#switchport mode access
+SW1(config-if-range)#switchport access vlan 10
+SW1(config-if-range)#exit
+
+SW1(config)#interface range fa0/4-5
+SW1(config-if-range)#switchport mode access
+SW1(config-if-range)#switchport access vlan 20
+SW1(config-if-range)#exit
+
+SW1(config)#interface range fa0/6-8
+SW1(config-if-range)#switchport mode access
+SW1(config-if-range)#switchport access vlan 30
+SW1(config-if-range)#exit
+
+SW1(config)#interface fa0/15
+SW1(config-if)#switchport mode access
+SW1(config-if)#switchport access vlan 40
+SW1(config-if)#exit
+
+SW1(config)#interface fa0/17
+SW1(config-if)#switchport mode access
+SW1(config-if)#switchport access vlan 40
+SW1(config-if)#exit
+
+
+
+(b). Assign Ports to VLANs on Switch 02
+---------------------------------------
+
+Fa0/5, Fa0/6 and Fa0/7 are assigned to VLAN 10
+Fa0/9 and Fa0/10  are assigned to VLAN 20
+Fa0/11 and Fa0/12  are assigned to VLAN 30
+Fa0/19, Fa0/20 and Fa0/21 are assigned to VLAN 40
+
+
+
+SW2(config)#interface range fa0/5-7
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 10
+SW2(config-if-range)#exit
+
+SW2(config)#interface range fa0/9-10
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 20
+SW2(config-if-range)#exit
+
+SW2(config)#interface range fa0/11-12
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 30
+SW2(config-if-range)#exit
+
+SW2(config)#interface range fa0/19-21
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 40
+SW2(config-if-range)#exit
+
+
+
+
+********************************************************
+04.We have to configure trunk link between the switches
+********************************************************
+(a). In Switch 01 (SW1)
+     Configure Fa0/24 as trunk port
+     Allow VLANs 10,20,30 and 40 on the trunk link and block rest all other VLANs
+     Configure VLAN 99 as Native VLAN
+    ------------------------------------------------------------------------------
+
+    SW1(config)#interface fa0/24
+    SW1(config-if)#switchport mode trunk
+    SW1(config-if)#switchport trunk native vlan 99
+    SW1(config-if)#switchport trunk allowed vlan 10,20,30,40
+
+
+
+(b). In Switch 02 (SW2)
+     Configure Fa0/24 as trunk port
+     Allow VLANs 10,20,30 and 40 on the trunk link and block rest all other VLANs
+     Configure VLAN 99 as Native VLAN
+     ----------------------------------------------------------------------------
+
+     SW2(config)#interface fa0/24
+     SW2(config-if)#switchport mode trunk
+     SW2(config-if)#switchport trunk native vlan 99
+     SW2(config-if)#switchport trunk allowed vlan 10,20,30,40
+
+
+
+
+*****************************************************************
+05. Verify the VLAN confoguration and port assignment to the VLAN
+*****************************************************************
+SW1#show vlan brief
+
+SW2#show vlan brief
+
+
+
+******************************
+06. Verify trunk configuration
+******************************
+SW1#show interfaces trunk
+
+SW2#show interfaces trunk
+
+
+
+*****************************************************
+07.We have to save the configuration in both switches
+*****************************************************
+
+SW1#copy running-config startup-config    
+   (or)
+SW1#copy run start
+   (or)
+SW1#wr
+
+
+SW2#copy running-config startup-config    
+   (or)
+SW2#copy run start
+   (or)
+SW2#wr
+
+
+
+
+***********************************************************
+08.Verify the connectivity between same VLAN (two switches)
+***********************************************************
+
+
+
+
+
+
